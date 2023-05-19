@@ -1,0 +1,3 @@
+C:\Users\DA\Desktop\EA Note Taking App\MarvelousApp\obj\Debug\MarvelousApp.njsproj.AssemblyReference.cache
+C:\Users\DA\Desktop\EA Note Taking App\MarvelousApp\obj\Debug\MarvelousApp.njsproj.CoreCompileInputs.cache
+C:\Users\DA\Desktop\EA Note Taking App\MarvelousApp\bin\Microsoft.NodejsTools.WebRole.dll
