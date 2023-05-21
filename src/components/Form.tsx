@@ -82,27 +82,46 @@ export const Form = () => {
                 },
                 method: 'POST',
                 body: JSON.stringify({ name: toAdd })
-            })
-            .then(res => res.json())
-            .then(
-                (result: TaskObject) => {
-                    const newAdd = { name: result.name, taskId: result.taskId, checked: result.checked, dateDone: result.dateDone };
-                    const newList = todoList.concat(newAdd).sort(TaskSorter);
-                    setTodo(newList);
-                    setToAdd('');
-                },
-                (error) => {
-                    setError(error);
-                }
-            )
+            }
+        )
+        .then(res => res.json())
+        .then(
+            (result: TaskObject) => {
+                const newAdd = { name: result.name, taskId: result.taskId, checked: result.checked, dateDone: result.dateDone };
+                const newList = todoList.concat(newAdd).sort(TaskSorter);
+                setTodo(newList);
+                setToAdd('');
+            },
+            (error) => {
+                setError(error);
+            }
+        )
     }
 
     const handleCheck = (taskObject) => {
-        const newTodoList = todoList.filter((todo) => todo.taskId !== taskObject.taskId);
-        setTodo(newTodoList);
-        const newTaskObject = { ...taskObject, checked: !taskObject.checked, dateDone: new Date() };
-        const newDoneList = doneList.concat(newTaskObject).sort(TaskSorter);
-        setDone(newDoneList);
+        fetch(
+            'https://localhost:8888/allTasks/check/' + taskObject.taskId,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'PUT',
+                body: JSON.stringify({ name: toAdd })
+            }
+        )
+        .then(res => res.json())
+        .then(
+            (result: TaskObject) => {
+                const newTodoList = todoList.filter((todo) => todo.taskId !== result.taskId);
+                setTodo(newTodoList);
+                const newDoneList = doneList.concat(result).sort(TaskSorter);
+                setDone(newDoneList);
+            },
+            (error) => {
+                setError(error);
+            }
+        )
     }
 
     const handleUncheck = (taskObject) => {
