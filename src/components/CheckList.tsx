@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Task, TaskObject, TaskSorter } from './Task';
 
+import './CheckList.css';
+
 type CheckListProps = {
     checkHandler: (taskObject: TaskObject) => void;
     uncheckHandler: (taskObject: TaskObject) => void;
@@ -17,10 +19,9 @@ export const CheckList = (props: CheckListProps) => {
             .slice(0, props.countLimit)
             .sort(TaskSorter);
     return (
-        <div>
-            <h3>{props.title}</h3>
-            <hr />
-            <ul>
+        <div className="checkList">
+            <h3 className="checkListTitle">{props.title}</h3>
+            <ul className="checkListList">
                 {newList
                     .map((todo: TaskObject) => (
                         <li key={todo.taskId}>

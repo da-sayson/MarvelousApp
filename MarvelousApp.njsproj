@@ -40,10 +40,16 @@
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="src\components\CheckList.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\Modal.css">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\components\Form.css">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="src\components\Task.css">
       <SubType>Code</SubType>
     </Content>
     <Content Include="src\components\Task.tsx">

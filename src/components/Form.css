@@ -1,3 +1,54 @@
 .formContainer {
-    padding: 10px;
+    padding: 50px;
+    padding-top: 10px;
+    font-family: 'Comic Sans MS', sans-serif;
+    font-weight: bold;
+    background-color: rgb(243,243, 243);
+}
+
+.formRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 50px;
+    margin-bottom: 20px;
+}
+
+.deleteLinkButton {
+    background: none;
+    border: none;
+    color: #00F;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    flex: 1;
+}
+
+.textInput {
+    width: 250px;
+    height: 36px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: .5em;
+}
+
+.textInput::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.formButton {
+    width: 80px;
+    height: 36px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: rgb(207, 226, 243);
+    margin: 5px;
+}
+
+h1 {
+    flex: 1;
+    font-size: 24px;
+    font-weight: bold;
+    height: 80px;
 }

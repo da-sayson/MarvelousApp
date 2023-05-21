@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { useState } from 'react'
+
+import './Task.css'
 
 export type TaskObject = {
     name: string;
@@ -24,8 +25,9 @@ export const Task = (props: TaskProps) => {
 
     return (
         <div>
-            <label>
+            <label class="taskControl">
                 <input
+                    className="taskCheckbox"
                     type="checkbox"
                     checked={props.taskObject.checked}
                     onChange={handleChange}

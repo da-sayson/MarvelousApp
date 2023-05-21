@@ -1,0 +1,21 @@
+.checkList {
+    width: 100%;
+}
+
+.checkListList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+}
+
+.checkListList li {
+    list-style-type: none;
+}
+
+.checkListTitle {
+    font-size: 20px;
+    border-bottom: 1px solid black;
+    padding: 5px;
+    padding-left: 10px;
+}

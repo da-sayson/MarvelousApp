@@ -121,16 +121,6 @@ export const Form = () => {
         )
     }
 
-    const style = {
-        background: 'none!important',
-        border: 'none',
-        padding: '0!important',
-        fontFamily: 'arial, sans-serif',
-        color: '#069',
-        textDecoration: 'underline',
-        cursor: 'pointer'
-    }
-
     const [toSearch, setToSearch] = useState('');
     const handleSearchChange = (event) => {
         setToSearch(event.target.value);
@@ -143,36 +133,54 @@ export const Form = () => {
     } else {
         return (
             <div className="formContainer">
-                <h1>Marvelous v2.0</h1>
+                <div className="formRow">
+                    <h1>Marvelous v2.0</h1>
 
-                <button style={style} onClick={openModal}>Delete all tasks</button>
-                <input
-                    type="text"
-                    name="toAdd"
-                    onChange={handleAddChange}
-                    value={toAdd}
-                />
-                <button onClick={handleClick}>Add</button>
-                <input
-                    type="text"
-                    name="toSearch"
-                    onChange={handleSearchChange}
-                    value={toSearch}
-                />
-                <CheckList
-                    title='To Do'
-                    taskList={todoList}
-                    checkHandler={handleCheck}
-                    uncheckHandler={handleUncheck}
-                    searchTerm={toSearch}
-                />
-                <CheckList
-                    title='Done'
-                    taskList={doneList}
-                    checkHandler={handleCheck}
-                    uncheckHandler={handleUncheck}
-                    searchTerm={toSearch}
-                    countLimit={10} />
+                    <div className="floatRightContents">
+                        <button className="deleteLinkButton" onClick={openModal}>Delete all tasks</button>
+                    </div>
+                </div>
+
+                <div className="formRow">
+                    <div id="addInputGroup">
+                        <input
+                            type="text"
+                            name="toAdd"
+                            className="textInput"
+                            onChange={handleAddChange}
+                            value={toAdd}
+                        />
+                        <button className="formButton" onClick={handleClick}>Add</button>
+                    </div>
+
+                    <input
+                        type="text"
+                        id="searchBar"
+                        name="toSearch"
+                        className="textInput"
+                        onChange={handleSearchChange}
+                        value={toSearch}
+                        placeholder="Search.."
+                    />
+                </div>
+
+                <div class="formRow">
+                    <CheckList
+                        title='To Do'
+                        taskList={todoList}
+                        checkHandler={handleCheck}
+                        uncheckHandler={handleUncheck}
+                        searchTerm={toSearch}
+                    />
+                    <CheckList
+                        title='Done'
+                        taskList={doneList}
+                        checkHandler={handleCheck}
+                        uncheckHandler={handleUncheck}
+                        searchTerm={toSearch}
+                        countLimit={10} />
+                </div>
+
                 {modalOpen && <Modal modalOpenSetter={setModalOpen} modalTaskDeleter={deleteTasks} />}
             </div>
         );
