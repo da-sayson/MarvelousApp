@@ -99,17 +99,7 @@ export const Form = () => {
     }
 
     const handleCheck = (taskObject) => {
-        fetch(
-            'https://localhost:8888/allTasks/check/' + taskObject.taskId,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'PUT',
-                body: JSON.stringify({ name: toAdd })
-            }
-        )
+        fetch('https://localhost:8888/allTasks/check/' + taskObject.taskId, { method: 'PUT' })
         .then(res => res.json())
         .then(
             (result: TaskObject) => {
@@ -125,11 +115,19 @@ export const Form = () => {
     }
 
     const handleUncheck = (taskObject) => {
-        const newDoneList = doneList.filter((done) => done.taskId !== taskObject.taskId);
-        setDone(newDoneList);
-        const newTaskObject = { ...taskObject, checked: !taskObject.checked, dateDone: null };
-        const newTodoList = todoList.concat(newTaskObject).sort(TaskSorter);
-        setTodo(newTodoList);
+        fetch('https://localhost:8888/allTasks/uncheck/' + taskObject.taskId, { method: 'PUT' })
+        .then(res => res.json())
+        .then(
+            (result: TaskObject) => {
+                const newDoneList = doneList.filter((done) => done.taskId !== result.taskId);
+                setDone(newDoneList);
+                const newTodoList = todoList.concat(result).sort(TaskSorter);
+                setTodo(newTodoList);
+            },
+            (error) => {
+                setError(error);
+            }
+        )
     }
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -139,9 +137,18 @@ export const Form = () => {
     }
 
     const deleteTasks = () => {
-        setTodo([]);
-        setDone([]);
-        setModalOpen(false);
+        fetch('https://localhost:8888/allTasks', { method: 'DELETE' })
+        .then(
+            () => {
+                setTodo([]);
+                setDone([]);
+                setModalOpen(false);
+            },
+            (error) => {
+                setModalOpen(false);
+                setError(error);
+            }
+        )
     }
 
     const style = {
