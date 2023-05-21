@@ -4,20 +4,33 @@ import { Task, TaskObject, TaskSorter } from './Task'
 import { v4 as uuidv4 } from 'uuid'
 import { Modal } from './Modal'
 
-type CheckList = {
+type CheckListProps = {
+    checkHandler: (taskObject: TaskObject) => void;
+    uncheckHandler: (taskObject: TaskObject) => void;
+    countLimit?: number;
+    taskList: TaskObject[];
     title: string;
-    taskName: string[];
+    searchTerm: string;
 }
 
-const CheckList = (props) => {
+const CheckList = (props: CheckListProps) => {
+    const searchReducedList = props.taskList.filter((todo: TaskObject) => todo.name.toLowerCase().includes(props.searchTerm.toLowerCase()));
+    const countLimitedList = props.countLimit ? searchReducedList.slice(0, props.countLimit) : searchReducedList;
     return (
         <div>
             <h3>{props.title}</h3>
             <hr />
             <ul>
-                {props.taskList.map((todo: TaskObject) => (
-                    <li key={todo.taskId}><Task taskObject={todo} checkHandler={props.checkHandler} uncheckHandler={props.uncheckHandler} /></li>
-                ))}
+                {countLimitedList
+                    .map((todo: TaskObject) => (
+                        <li key={todo.taskId}>
+                            <Task
+                                taskObject={todo}
+                                checkHandler={props.checkHandler}
+                                uncheckHandler={props.uncheckHandler}
+                            />
+                        </li>
+                    ))}
             </ul>
         </div>
     );
@@ -28,7 +41,7 @@ export const Form = () => {
     const [todoList, setTodo] = useState<TaskObject[]>([]);
     const [doneList, setDone] = useState<TaskObject[]>([]);
 
-    const handleChange = (event) => {
+    const handleAddChange = (event) => {
         setToAdd(event.target.value);
     }
 
@@ -37,7 +50,7 @@ export const Form = () => {
         if (toAdd.length === 0) {
             return;
         }
-        const newAdd = {name: toAdd, taskId: uuidv4(), checked: false};
+        const newAdd = {name: toAdd, taskId: uuidv4(), checked: false, dateDone: null};
         const newList = todoList.concat(newAdd).sort(TaskSorter);
         setTodo(newList);
         setToAdd('');
@@ -46,7 +59,7 @@ export const Form = () => {
     const handleCheck = (taskObject) => {
         const newTodoList = todoList.filter((todo) => todo.taskId !== taskObject.taskId);
         setTodo(newTodoList);
-        const newTaskObject = { ...taskObject, checked: !taskObject.checked };
+        const newTaskObject = { ...taskObject, checked: !taskObject.checked, dateDone: new Date() };
         const newDoneList = doneList.concat(newTaskObject).sort(TaskSorter);
         setDone(newDoneList);
     }
@@ -54,7 +67,7 @@ export const Form = () => {
     const handleUncheck = (taskObject) => {
         const newDoneList = doneList.filter((done) => done.taskId !== taskObject.taskId);
         setDone(newDoneList);
-        const newTaskObject = { ...taskObject, checked: !taskObject.checked };
+        const newTaskObject = { ...taskObject, checked: !taskObject.checked, dateDone: null };
         const newTodoList = todoList.concat(newTaskObject).sort(TaskSorter);
         setTodo(newTodoList);
     }
@@ -81,6 +94,10 @@ export const Form = () => {
         cursor: 'pointer'
     }
 
+    const [toSearch, setToSearch] = useState('');
+    const handleSearchChange = (event) => {
+        setToSearch(event.target.value);
+    }
     return (
         <div>
             <h1>Marvelous v2.0</h1>
@@ -89,12 +106,30 @@ export const Form = () => {
             <input
                 type="text"
                 name="toAdd"
-                onChange={handleChange}
+                onChange={ handleAddChange }
                 value={ toAdd }
             />
             <button onClick={handleClick}>Add</button>
-            <CheckList title='To Do' taskList={todoList} checkHandler={handleCheck} uncheckHandler={handleUncheck} />
-            <CheckList title='Done' taskList={doneList} checkHandler={handleCheck} uncheckHandler={handleUncheck} />
+            <input
+                type="text"
+                name="toSearch"
+                onChange={ handleSearchChange }
+                value={ toSearch }
+            />
+            <CheckList
+                title='To Do'
+                taskList={todoList}
+                checkHandler={handleCheck}
+                uncheckHandler={handleUncheck}
+                searchTerm={toSearch}
+            />
+            <CheckList
+                title='Done'
+                taskList={doneList}
+                checkHandler={handleCheck}
+                uncheckHandler={handleUncheck}
+                searchTerm={toSearch}
+                countLimit={10} />
             {modalOpen && <Modal modalOpenSetter={setModalOpen} modalTaskDeleter={deleteTasks} />}
         </div>
     );

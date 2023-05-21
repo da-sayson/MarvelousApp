@@ -5,6 +5,7 @@ export type TaskObject = {
     name: string;
     taskId: number;
     checked: boolean;
+    dateDone: Date;
 }
 
 export const TaskSorter = (a, b) => a.name > b.name ? 1 : -1;
