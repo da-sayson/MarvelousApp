@@ -15,13 +15,15 @@ type CheckListProps = {
 
 const CheckList = (props: CheckListProps) => {
     const searchReducedList = props.taskList.filter((todo: TaskObject) => todo.name.toLowerCase().includes(props.searchTerm.toLowerCase()));
-    const countLimitedList = props.countLimit ? searchReducedList.slice(0, props.countLimit) : searchReducedList;
+    const timeOrderedList = props.countLimit ? searchReducedList.sort((a, b) => a.dateDone > b.dateDone ? -1 : 1) : searchReducedList;
+    const countLimitedList = props.countLimit ? searchReducedList.slice(0, props.countLimit) : timeOrderedList;
+    const alphabeticalList = countLimitedList.sort(TaskSorter);
     return (
         <div>
             <h3>{props.title}</h3>
             <hr />
             <ul>
-                {countLimitedList
+                {alphabeticalList
                     .map((todo: TaskObject) => (
                         <li key={todo.taskId}>
                             <Task
