@@ -43,6 +43,9 @@
     <Content Include="src\components\Modal.css">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="src\components\Form.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\Task.tsx">
       <SubType>Code</SubType>
     </Content>
@@ -55,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\app.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\components\CheckList.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\components\Form.tsx">

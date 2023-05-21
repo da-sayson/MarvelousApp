@@ -1,42 +1,10 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { Task, TaskObject, TaskSorter } from './Task'
-import { v4 as uuidv4 } from 'uuid'
+import { CheckList } from './CheckList'
+import { TaskObject, TaskSorter } from './Task'
 import { Modal } from './Modal'
 
-type CheckListProps = {
-    checkHandler: (taskObject: TaskObject) => void;
-    uncheckHandler: (taskObject: TaskObject) => void;
-    countLimit?: number;
-    taskList: TaskObject[];
-    title: string;
-    searchTerm: string;
-}
-
-const CheckList = (props: CheckListProps) => {
-    const searchReducedList = props.taskList.filter((todo: TaskObject) => todo.name.toLowerCase().includes(props.searchTerm.toLowerCase()));
-    const timeOrderedList = props.countLimit ? searchReducedList.sort((a, b) => a.dateDone > b.dateDone ? -1 : 1) : searchReducedList;
-    const countLimitedList = props.countLimit ? searchReducedList.slice(0, props.countLimit) : timeOrderedList;
-    const alphabeticalList = countLimitedList.sort(TaskSorter);
-    return (
-        <div>
-            <h3>{props.title}</h3>
-            <hr />
-            <ul>
-                {alphabeticalList
-                    .map((todo: TaskObject) => (
-                        <li key={todo.taskId}>
-                            <Task
-                                taskObject={todo}
-                                checkHandler={props.checkHandler}
-                                uncheckHandler={props.uncheckHandler}
-                            />
-                        </li>
-                    ))}
-            </ul>
-        </div>
-    );
-}
+import './Form.css'
 
 export const Form = () => {
     const [error, setError] = useState(null);
@@ -174,7 +142,7 @@ export const Form = () => {
         return <div>Loading...</div>
     } else {
         return (
-            <div>
+            <div className="formContainer">
                 <h1>Marvelous v2.0</h1>
 
                 <button style={style} onClick={openModal}>Delete all tasks</button>
