@@ -49,7 +49,7 @@ export const Form = () => {
             .then(res => res.json())
             .then(
                 (result) => {
-                setIsLoaded(true);
+                    setIsLoaded(true);
 
                     const serverTodoList = result.filter((task: TaskObject) => !task.checked);
                     setTodo(serverTodoList);
@@ -73,10 +73,28 @@ export const Form = () => {
         if (toAdd.length === 0) {
             return;
         }
-        const newAdd = {name: toAdd, taskId: uuidv4(), checked: false, dateDone: null};
-        const newList = todoList.concat(newAdd).sort(TaskSorter);
-        setTodo(newList);
-        setToAdd('');
+        fetch(
+            'https://localhost:8888/allTasks',
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'POST',
+                body: JSON.stringify({ name: toAdd })
+            })
+            .then(res => res.json())
+            .then(
+                (result: TaskObject) => {
+                    const newAdd = { name: result.name, taskId: result.taskId, checked: result.checked, dateDone: result.dateDone };
+                    const newList = todoList.concat(newAdd).sort(TaskSorter);
+                    setTodo(newList);
+                    setToAdd('');
+                },
+                (error) => {
+                    setError(error);
+                }
+            )
     }
 
     const handleCheck = (taskObject) => {
