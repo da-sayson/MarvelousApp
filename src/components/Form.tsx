@@ -38,6 +38,12 @@ export const Form = () => {
         setToAdd(event.target.value);
     }
 
+    const handlePressEnter = (event) => {
+        if (event.key === 'Enter') {
+            handleClick(event);
+        }
+    }
+
     const handleClick = (event) => {
         event.preventDefault();
         if (toAdd.length === 0) {
@@ -148,6 +154,7 @@ export const Form = () => {
                             name="toAdd"
                             className="textInput"
                             onChange={handleAddChange}
+                            onKeyPress={handlePressEnter}
                             value={toAdd}
                         />
                         <button className="formButton" onClick={handleClick}>Add</button>
