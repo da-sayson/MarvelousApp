@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Task, TaskObject, TaskSorter } from './Task'
 import { v4 as uuidv4 } from 'uuid'
 import { Modal } from './Modal'
@@ -37,9 +37,32 @@ const CheckList = (props: CheckListProps) => {
 }
 
 export const Form = () => {
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    
     const [toAdd, setToAdd] = useState('');
     const [todoList, setTodo] = useState<TaskObject[]>([]);
     const [doneList, setDone] = useState<TaskObject[]>([]);
+
+    useEffect(() => {
+        fetch('https://localhost:8888/allTasks')
+            .then(res => res.json())
+            .then(
+                (result) => {
+                setIsLoaded(true);
+
+                    const serverTodoList = result.filter((task: TaskObject) => !task.checked);
+                    setTodo(serverTodoList);
+
+                    const serverDoneList = result.filter((task: TaskObject) => task.checked);
+                    setDone(serverDoneList);
+                },
+                (error) => {
+                    setIsLoaded(true);
+                    setError(error);
+                }
+            )
+    }, []);
 
     const handleAddChange = (event) => {
         setToAdd(event.target.value);
@@ -98,39 +121,46 @@ export const Form = () => {
     const handleSearchChange = (event) => {
         setToSearch(event.target.value);
     }
-    return (
-        <div>
-            <h1>Marvelous v2.0</h1>
-            
-            <button style={style} onClick={openModal}>Delete all tasks</button>
-            <input
-                type="text"
-                name="toAdd"
-                onChange={ handleAddChange }
-                value={ toAdd }
-            />
-            <button onClick={handleClick}>Add</button>
-            <input
-                type="text"
-                name="toSearch"
-                onChange={ handleSearchChange }
-                value={ toSearch }
-            />
-            <CheckList
-                title='To Do'
-                taskList={todoList}
-                checkHandler={handleCheck}
-                uncheckHandler={handleUncheck}
-                searchTerm={toSearch}
-            />
-            <CheckList
-                title='Done'
-                taskList={doneList}
-                checkHandler={handleCheck}
-                uncheckHandler={handleUncheck}
-                searchTerm={toSearch}
-                countLimit={10} />
-            {modalOpen && <Modal modalOpenSetter={setModalOpen} modalTaskDeleter={deleteTasks} />}
-        </div>
-    );
+
+    if (error) {
+        return <div>Error: {error.message}</div>
+    } else if (!isLoaded) {
+        return <div>Loading...</div>
+    } else {
+        return (
+            <div>
+                <h1>Marvelous v2.0</h1>
+
+                <button style={style} onClick={openModal}>Delete all tasks</button>
+                <input
+                    type="text"
+                    name="toAdd"
+                    onChange={handleAddChange}
+                    value={toAdd}
+                />
+                <button onClick={handleClick}>Add</button>
+                <input
+                    type="text"
+                    name="toSearch"
+                    onChange={handleSearchChange}
+                    value={toSearch}
+                />
+                <CheckList
+                    title='To Do'
+                    taskList={todoList}
+                    checkHandler={handleCheck}
+                    uncheckHandler={handleUncheck}
+                    searchTerm={toSearch}
+                />
+                <CheckList
+                    title='Done'
+                    taskList={doneList}
+                    checkHandler={handleCheck}
+                    uncheckHandler={handleUncheck}
+                    searchTerm={toSearch}
+                    countLimit={10} />
+                {modalOpen && <Modal modalOpenSetter={setModalOpen} modalTaskDeleter={deleteTasks} />}
+            </div>
+        );
+    }
 }
