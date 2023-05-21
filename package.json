@@ -7,7 +7,9 @@
     "name": ""
   },
   "devDependencies": {
-    "eslint": "^8.21.0"
+    "css-loader": "^6.7.4",
+    "eslint": "^8.21.0",
+    "style-loader": "^3.3.3"
   },
   "eslintConfig": {},
   "dependencies": {
@@ -23,5 +25,8 @@
   },
   "scripts": {
     "build": "webpack-cli --config webpack-config.js"
+  },
+  "overrides": {
+    "semver-regex": "4.0.5"
   }
 }

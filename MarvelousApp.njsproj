@@ -31,6 +31,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include=".gitignore" />
     <Content Include="dist\app-bundle.js" />
     <Content Include="dist\app-bundle.js.map" />
     <Content Include="index.html">
@@ -39,6 +40,9 @@
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+    <Content Include="src\components\Modal.css">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="src\components\Task.tsx">
       <SubType>Code</SubType>
     </Content>
@@ -54,6 +58,9 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\components\Form.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Include="src\components\Modal.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Include="src\index.tsx">
