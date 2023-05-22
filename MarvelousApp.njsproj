@@ -37,6 +37,7 @@
     <Content Include="index.html">
       <SubType>Code</SubType>
     </Content>
+    <None Include="Properties\PublishProfiles\MarvelousApp20230522150731 - Web Deploy.pubxml" />
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
@@ -58,6 +59,7 @@
     <Content Include="tsconfig.json">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="Web.config" />
     <Content Include="webpack-config.js">
       <SubType>Code</SubType>
     </Content>
@@ -81,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dist\" />
+    <Folder Include="Properties\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="src\" />
     <Folder Include="src\components\" />
   </ItemGroup>
