@@ -1,9 +1,10 @@
 # MarvelousApp
 
-Please run the backend first
+Please ensure you have Node and npm installed. Additionally, please run the backend first:
 
-Run `npm install`
-Then run `npm run build`
-Then run `npm start`
-Then open a browser and type in 'localhost:3000'
-
+1) Download the code
+2) In a terminal, change directories into the project directory
+3) Run `$ npm install`
+4) Then run `$ npm run build`
+5) Then run `$ npm start`
+6) Then open a browser, type in 'localhost:3000', and press Enter
