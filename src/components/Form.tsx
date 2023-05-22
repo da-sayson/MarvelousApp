@@ -14,25 +14,22 @@ export const Form = () => {
     const [todoList, setTodo] = useState<TaskObject[]>([]);
     const [doneList, setDone] = useState<TaskObject[]>([]);
 
-    useEffect(() => {
-        fetch('https://localhost:8888/allTasks')
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoaded(true);
+    const loadTasksFromServer = async () => {
+        try {
+            const response = await fetch('https://localhost:8888/allTasks');
+            const returnedTask: TaskObject[] = await response.json();
 
-                    const serverTodoList = result.filter((task: TaskObject) => !task.checked);
-                    setTodo(serverTodoList);
+            const returnedTodoList = returnedTask.filter((task: TaskObject) => !task.checked);
+            setTodo(returnedTodoList);
 
-                    const serverDoneList = result.filter((task: TaskObject) => task.checked);
-                    setDone(serverDoneList);
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
-    }, []);
+            const returnedDoneList = returnedTask.filter((task: TaskObject) => task.checked);
+            setDone(returnedDoneList);
+        } catch (error) {
+            setError(error);
+        }
+        setIsLoaded(true);
+    }
+    useEffect(loadTasksFromServer, []);
 
     const handleAddChange = (event) => {
         setToAdd(event.target.value);
@@ -44,87 +41,104 @@ export const Form = () => {
         }
     }
 
+    const addTaskToServer = async () => {
+        try {
+            const response = await fetch(
+                'https://localhost:8888/allTasks',
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    method: 'POST',
+                    body: JSON.stringify({ name: toAdd })
+                }
+            );
+            const returnedTask: TaskObject = await response.json();
+
+            const newAdd = {
+                name: returnedTask.name,
+                taskId: returnedTask.taskId,
+                checked: returnedTask.checked,
+                dateDone: returnedTask.dateDone
+            }
+            const newList = todoList.concat(newAdd).sort(TaskSorter);
+            setTodo(newList);
+            setToAdd('');
+        } catch (error) {
+            setError(error);
+        }
+    }
     const handleClick = (event) => {
         event.preventDefault();
         if (toAdd.length === 0) {
             return;
         }
-        fetch(
-            'https://localhost:8888/allTasks',
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST',
-                body: JSON.stringify({ name: toAdd })
-            }
-        )
-        .then(res => res.json())
-        .then(
-            (result: TaskObject) => {
-                const newAdd = { name: result.name, taskId: result.taskId, checked: result.checked, dateDone: result.dateDone };
-                const newList = todoList.concat(newAdd).sort(TaskSorter);
-                setTodo(newList);
-                setToAdd('');
-            },
-            (error) => {
-                setError(error);
-            }
-        )
+        addTaskToServer();
     }
 
-    const handleCheck = (taskObject) => {
-        fetch('https://localhost:8888/allTasks/check/' + taskObject.taskId, { method: 'PUT' })
-        .then(res => res.json())
-        .then(
-            (result: TaskObject) => {
-                const newTodoList = todoList.filter((todo) => todo.taskId !== result.taskId);
-                setTodo(newTodoList);
-                const newDoneList = doneList.concat(result).sort(TaskSorter);
-                setDone(newDoneList);
-            },
-            (error) => {
-                setError(error);
-            }
-        )
+    const checkServerTask = async (taskObject: TaskObject) => {
+        try {
+            const response = await fetch(
+                'https://localhost:8888/allTasks/check/' + taskObject.taskId,
+                { method: 'PUT' }
+            )
+            const returnedTask: TaskObject = await response.json();
+            const newTodoList: TaskObject[] = todoList.filter((todo: TaskObject) => todo.taskId !== returnedTask.taskId);
+            setTodo(newTodoList);
+            const newDoneList: TaskObject[] = doneList.concat(returnedTask).sort(TaskSorter);
+            setDone(newDoneList);
+        } catch (error) {
+            setError(error);
+        }
+
+    }
+    const handleCheck = (taskObject: TaskObject) => {
+        checkServerTask(taskObject);
     }
 
-    const handleUncheck = (taskObject) => {
-        fetch('https://localhost:8888/allTasks/uncheck/' + taskObject.taskId, { method: 'PUT' })
-        .then(res => res.json())
-        .then(
-            (result: TaskObject) => {
-                const newDoneList = doneList.filter((done) => done.taskId !== result.taskId);
-                setDone(newDoneList);
-                const newTodoList = todoList.concat(result).sort(TaskSorter);
-                setTodo(newTodoList);
-            },
-            (error) => {
-                setError(error);
-            }
-        )
+    const uncheckServerTask = async (taskObject: TaskObject) => {
+        try {
+            const response = await fetch(
+                'https://localhost:8888/allTasks/uncheck/' + taskObject.taskId,
+                { method: 'PUT' }
+            );
+            const returnedTask: TaskObject = await response.json();
+
+            const newDoneList: TaskObject[] = doneList.filter((done: TaskObject) => done.taskId !== returnedTask.taskId);
+            setDone(newDoneList);
+
+            const newTodoList: TaskObject[] = todoList.concat(returnedTask).sort(TaskSorter);
+            setTodo(newTodoList);
+        } catch (error) {
+            setError(error);
+        }
+    }
+    const handleUncheck = (taskObject: TaskObject) => {
+        uncheckServerTask(taskObject);
     }
 
     const [modalOpen, setModalOpen] = useState(false);
-
     const openModal = () => {
         setModalOpen(true);
     }
 
-    const deleteTasks = () => {
-        fetch('https://localhost:8888/allTasks', { method: 'DELETE' })
-        .then(
-            () => {
+    const deleteAllOnServer = async () => {
+        try {
+            const response = await fetch('https://localhost:8888/allTasks', { method: 'DELETE' });
+            if (response.ok) {
                 setTodo([]);
                 setDone([]);
-                setModalOpen(false);
-            },
-            (error) => {
-                setModalOpen(false);
-                setError(error);
+            } else {
+                setError('Error:' + response.status.toString() + ':' + response.statusText);
             }
-        )
+        } catch (error) {
+            setError(error);
+        }
+        setModalOpen(false);
+    }
+    const deleteTasks = () => {
+        deleteAllOnServer();
     }
 
     const [toSearch, setToSearch] = useState('');
